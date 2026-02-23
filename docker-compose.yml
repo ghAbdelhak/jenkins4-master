@@ -9,7 +9,7 @@ services:
     environment:
       MYSQL_DATABASE: livdb
       MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword123
+      MYSQL_PASSWORD: mypassword
       MYSQL_ROOT_PASSWORD: rootpassword
     ports:
       - "3306:3306"
@@ -28,7 +28,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/livdb
       SPRING_DATASOURCE_USERNAME: myuser
-      SPRING_DATASOURCE_PASSWORD: mypassword
+      SPRING_DATASOURCE_PASSWORD: mypassword123
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: true
 
