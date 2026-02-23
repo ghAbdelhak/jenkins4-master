@@ -48,7 +48,8 @@ public class WebSecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
-                                "/api/customer/**"
+                                "/api/customer/**",
+                                "/actuator/health"
                         ).permitAll()
                         .requestMatchers("order/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
