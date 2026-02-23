@@ -123,44 +123,7 @@ pipeline {
             }
         }
 
-        stage('Rollback') {
-            when {
-                expression { currentBuild.result == 'FAILURE' }
-            }
-            steps {
-                /*  def stableTag = sh(
-                         script: "git tag --sort=-creatordate | head -n 1",
-                         returnStdout: true
-                     ).trim()
-                 echo "pro stable ${stableTag}" */
-                echo "Starting rollback to tag: ${ROLLBACK_TAG}"
-                script {
-                    bat """
-                        git fetch origin --tags --force                                        git checkout tags/${ROLLBACK_TAG} -b ${ROLLBACK_BRANCH}
-                   """
-                    echo "Rolled back to tag ${ROLLBACK_TAG} on new branch ${ROLLBACK_BRANCH}"
 
-
-                    //sh './deploy.sh'
-                    bat './mvnw clean'
-                    bat './mvnw install'
-
-                    // Stop and remove containers safely
-                    bat 'docker-compose down --remove-orphans'
-                    bat 'docker rm -f spring-boot-app || exit 0'
-                    bat 'docker rm -f mysql-db || exit 0'
-
-                    // Rebuild and start
-                    bat 'docker-compose up --build -d'
-
-                    echo "Rollback deployment complete"
-
-
-
-
-                }
-            }
-        }
 
     }
     post {
@@ -168,7 +131,44 @@ pipeline {
             echo 'success'
         }
         failure {
-            echo 'failed'
+            stage('Rollback') {
+                when {
+                    expression { currentBuild.result == 'FAILURE' }
+                }
+                steps {
+                    /*  def stableTag = sh(
+                             script: "git tag --sort=-creatordate | head -n 1",
+                             returnStdout: true
+                         ).trim()
+                     echo "pro stable ${stableTag}" */
+                    echo "Starting rollback to tag: ${ROLLBACK_TAG}"
+                    script {
+                        bat """
+                        git fetch origin --tags --force                                        git checkout tags/${ROLLBACK_TAG} -b ${ROLLBACK_BRANCH}
+                   """
+                        echo "Rolled back to tag ${ROLLBACK_TAG} on new branch ${ROLLBACK_BRANCH}"
+
+
+                        //sh './deploy.sh'
+                        bat './mvnw clean'
+                        bat './mvnw install'
+
+                        // Stop and remove containers safely
+                        bat 'docker-compose down --remove-orphans'
+                        bat 'docker rm -f spring-boot-app || exit 0'
+                        bat 'docker rm -f mysql-db || exit 0'
+
+                        // Rebuild and start
+                        bat 'docker-compose up --build -d'
+
+                        echo "Rollback deployment complete"
+
+
+
+
+                    }
+                }
+            }
         }
     }
 }
