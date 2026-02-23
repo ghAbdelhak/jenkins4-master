@@ -117,15 +117,18 @@ pipeline {
                         }
 
                     } else {
-                        currentBuild.result = "failure"
+                        currentBuild.result = "FAILURE"
+
+
                     }
+                    echo currentBuild.result
                 }
             }
         }
 
         stage('Rollback') {
             when {
-                expression { currentBuild.result == 'failure' }
+                expression { currentBuild.result == "FAILURE" }
             }
             steps {
                 /*  def stableTag = sh(
