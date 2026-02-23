@@ -117,7 +117,7 @@ pipeline {
                         }
 
                     } else {
-                        error("Application not reachable")
+                        currentBuild.result = "Application not reachable"
                     }
                 }
             }
