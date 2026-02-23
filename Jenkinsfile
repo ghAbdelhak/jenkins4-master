@@ -118,7 +118,7 @@ pipeline {
                         }
 
                     } else {
-                        result = "failure"
+                        currentBuild.result = "failure"
                     }
                 }
             }
