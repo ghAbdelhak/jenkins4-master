@@ -62,12 +62,17 @@ stages {
 
     stage('Deploy') {
         when {
-        branch 'master'
+            branch 'master'
         }
         steps {
-            bat 'docker-compose up --build -d'
+            bat '''
+        docker-compose down --rmi all --volumes --remove-orphans
+        docker system prune -f
+        docker-compose up --build -d
+        '''
         }
     }
+
     stage('Health Check') {
         steps {
             echo "Checking Health..."
@@ -79,7 +84,7 @@ stages {
 
                 def result = bat(
                         script: """
-                   curl -s -o response.json -w "%{http_code}" http://localhost:8082/actuator/health || echo "000"
+                  curl -s -o response.json -w "%%{http_code}" http://localhost:8082/actuator/health || echo 000
                """,
                         returnStdout: true
                 ).trim()
