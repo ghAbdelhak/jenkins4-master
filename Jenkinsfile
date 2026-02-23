@@ -1,5 +1,6 @@
 pipeline {
     agent any
+    result any
     environment {
         ROLLBACK_TAG = "v1.0.0"   // Set your stable rollback tag here
         ROLLBACK_BRANCH = "rollback/hotfix-1.0.0"
@@ -117,7 +118,7 @@ pipeline {
                         }
 
                     } else {
-                        currentBuild.result = "Application not reachable"
+                        result = "failure"
                     }
                 }
             }
@@ -125,7 +126,7 @@ pipeline {
 
         stage('Rollback') {
             when {
-                expression { currentBuild.result == 'Application not reachable' }
+                expression { currentBuild.result == 'failure' }
             }
             steps {
                 /*  def stableTag = sh(
