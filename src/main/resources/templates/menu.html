@@ -1,0 +1,194 @@
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+<link th:href="@{/css/main.css}" rel="stylesheet" />
+
+<body
+xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" th:href="@{/}">
+      <i class="bi bi-shop nav-icon"></i>UniFlow Pro
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <!-- Orders Section with Notification Badge -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle notification-wrapper" href="#" id="ordersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-cart nav-icon"></i>Commandes
+            <span th:if="${unprocessedOrders > 0}" class="badge bg-danger badge-notification" th:text="${unprocessedOrders}"></span>
+          </a>
+          <ul class="dropdown-menu" sec:authorize="hasRole('ADMIN')">
+            <li>
+              <a class="dropdown-item" th:href="@{/order/list}">
+                <i class="bi bi-person nav-icon"></i> Commandes Client
+                <span th:if="${unprocessedClientOrders > 0}" class="badge bg-danger" th:text="${unprocessedClientOrders}"></span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" th:href="@{/commercial_order/list}">
+                <i class="bi bi-person-badge nav-icon"></i> Commandes Commercial
+                <span th:if="${unprocessedCommercialOrders > 0}" class="badge bg-danger" th:text="${unprocessedCommercialOrders}"></span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Caisse Section -->
+        <li class="nav-item dropdown" sec:authorize="hasAnyRole('CASHIER','ADMIN')">
+          <a class="nav-link dropdown-toggle notification-wrapper" href="#" id="cashierDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-cash-stack nav-icon"></i>Caisse
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" th:href="@{/cash_register_transaction/customer/list}">
+                <i class="bi bi-person-plus nav-icon"></i> Versements Clients
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" th:href="@{/cash_register_transaction/user/list}">
+                <i class="bi bi-people nav-icon"></i> Versements Commerciaux
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" th:href="@{/withdrawal_transaction/list}"><i class="bi bi-cash nav-icon"></i>Retraits Caisse</a></li>
+
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" th:href="@{/cash_register_transaction/showTodayTransactions}"><i class="bi bi-list-check nav-icon"></i> Transactions Journalières</a></li>
+            <li><a class="dropdown-item" th:href="@{/cash_closure/list}"><i class="bi bi-lock nav-icon"></i> Clôture de Caisse</a></li>
+          </ul>
+        </li>
+
+        <!-- Inventory Section -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="inventoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-box-seam nav-icon"></i>Inventaire
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" th:href="@{/product/list}"><i class="bi bi-box nav-icon"></i> Produits</a></li>
+            <li><a class="dropdown-item" th:href="@{/pack/list}"><i class="bi bi-boxes nav-icon"></i> Packs</a></li>
+            <li><a class="dropdown-item" th:href="@{/stock/list}"><i class="bi bi-arrow-down-circle nav-icon"></i> Entrée Stock</a></li>
+          </ul>
+        </li>
+
+        <!-- Menu Clients -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="clientDropdown" role="button" data-bs-toggle="dropdown">
+            <i class="bi bi-people nav-icon"></i> Clients
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" th:href="@{/client/list}"><i class="bi bi-list-ul me-2"></i> Gestion clients</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><h6 class="dropdown-header">Transactions</h6></li>
+            <li>
+              <a class="dropdown-item" th:href="@{/client/orders}">
+                <i class="bi bi-cart me-2"></i> Commandes
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" th:href="@{/client/payments}">
+                <i class="bi bi-cash-coin me-2"></i> Paiements
+              </a>
+            </li>
+            <li><a class="dropdown-item" th:href="@{/client/returns}"><i class="bi bi-arrow-return-left me-2"></i> Retours</a></li>
+            <li><a class="dropdown-item" th:href="@{/client/stats}"><i class="bi bi-graph-up me-2"></i> Statistiques</a></li>
+          </ul>
+        </li>
+
+        <!-- Menu commercial -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="commercialDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-bounding-box nav-icon"></i> Commerciaux
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" th:href="@{/commercial/routing}"><i class="bi bi-map nav-icon me-2"></i> Routage Visites</a></li>
+            <li><a class="dropdown-item" th:href="@{/commercial/list}"><i class="bi bi-list-ul me-2"></i> Liste Commerciaux</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><h6 class="dropdown-header">Transactions</h6></li>
+            <li>
+              <a class="dropdown-item" th:href="@{/commercial/orders}">
+                <i class="bi bi-cart me-2"></i> Commandes
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" th:href="@{/commercial/payments}">
+                <i class="bi bi-cash-coin me-2"></i> Paiements
+              </a>
+            </li>
+            <li><a class="dropdown-item" th:href="@{/commercial/returns}"><i class="bi bi-arrow-return-left me-2"></i> Retours</a></li>
+            <li><a class="dropdown-item" th:href="@{/commercial/stats}"><i class="bi bi-graph-up me-2"></i> Statistiques</a></li>
+          </ul>
+        </li>
+
+        <!-- Suppliers -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="supplierDropdown" role="button" data-bs-toggle="dropdown">
+            Fournisseurs
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" th:href="@{/supplier/list}"><i class="bi bi-list-ul me-2"></i> Gestion fournisseurs</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><h6 class="dropdown-header">Gestion avancée</h6></li>
+            <li><a class="dropdown-item" th:href="@{/supplier/orders}"><i class="bi bi-cart me-2"></i> Commandes</a></li>
+            <li><a class="dropdown-item" th:href="@{/supplier/returns}"><i class="bi bi-arrow-return-left me-2"></i> Retours</a></li>
+            <li><a class="dropdown-item" th:href="@{/supplier/payments}"><i class="bi bi-cash-stack me-2"></i> Paiements</a></li>
+            <li><a class="dropdown-item" th:href="@{/supplier/analytics}"><i class="bi bi-graph-up me-2"></i> Statistiques</a></li>
+          </ul>
+        </li>
+
+        <!-- Reporting Section -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="reportingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-graph-up nav-icon"></i>Reporting
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" th:href="@{/report/sales}"><i class="bi bi-currency-dollar nav-icon"></i> Ventes</a></li>
+            <li><a class="dropdown-item" th:href="@{/report/inventory}"><i class="bi bi-box-seam nav-icon"></i> Stock</a></li>
+            <li><a class="dropdown-item" th:href="@{/report/cashier}"><i class="bi bi-cash-coin nav-icon"></i> Caisse</a></li>
+            <li><a class="dropdown-item" th:href="@{/report/custom}"><i class="bi bi-file-earmark-bar-graph nav-icon"></i> Rapports Personnalisés</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ms-auto">
+        <!-- Right-aligned items -->
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/contact}">
+            <i class="bi bi-envelope nav-icon"></i>Contact
+          </a>
+        </li>
+
+        <!-- Admin Section -->
+        <li class="nav-item dropdown admin-menu">
+          <a class="nav-link dropdown-toggle text-warning" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-shield-lock nav-icon"></i>Admin
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><h6 class="dropdown-header">Gestion Utilisateurs</h6></li>
+            <li><a class="dropdown-item" th:href="@{/admin/users}"><i class="bi bi-people nav-icon"></i> Utilisateurs</a></li>
+            <li><a class="dropdown-item" th:href="@{/admin/roles}"><i class="bi bi-key nav-icon"></i> Rôles</a></li>
+          </ul>
+        </li>
+
+        <!-- Profile dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle nav-icon"></i>Mon profil
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" th:href="@{/showChangePassword}"><i class="bi bi-key nav-icon"></i> Changer mot de passe</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" th:href="@{/logout}"><i class="bi bi-box-arrow-right nav-icon"></i> Déconnexion</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>

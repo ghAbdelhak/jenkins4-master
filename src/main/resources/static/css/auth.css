@@ -1,0 +1,136 @@
+/* Base Styles */
+.auth-body {
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Main Container */
+.auth-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 2rem;
+}
+
+/* Card Styling */
+.auth-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem;
+    text-align: center;
+}
+
+/* Branding */
+.auth-brand {
+    margin-bottom: 2rem;
+}
+
+.auth-brand h1 {
+    color: #502c2c;
+    font-weight: 600;
+    margin-top: 1rem;
+    font-size: 1.8rem;
+}
+
+.auth-logo {
+    font-size: 3rem;
+    color: #db5b34;
+}
+
+/* Form Elements */
+.auth-form {
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #495057;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    border-color: #db4234;
+    box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+}
+
+/* Button */
+.auth-btn {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: none;
+    background-color: #db3434;
+    color: white;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    transition: all 0.3s;
+}
+
+.auth-btn:hover {
+    background-color: #b92e29;
+    transform: translateY(-2px);
+}
+
+/* Links */
+.auth-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.auth-links a {
+    color: #7f8c8d;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.auth-links a:hover {
+    color: #db3434;
+}
+
+/* Footer */
+.auth-footer {
+    text-align: center;
+    margin-top: 2rem;
+    color: #95a5a6;
+    font-size: 0.85rem;
+}
+
+/* Remember Me Checkbox */
+.form-check-input {
+    margin-top: 0.3rem;
+}
+
+.form-check-label {
+    margin-left: 0.5rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .auth-card {
+        padding: 1.5rem;
+    }
+
+    .auth-brand h1 {
+        font-size: 1.5rem;
+    }
+}

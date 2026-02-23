@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniFlow Pro - Nouveau pack</title>
+  <link th:href="@{/css/confirm.css}" rel="stylesheet" />
+  <style>
+    .table-container {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+    }
+    .form-container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+
+<body>
+<!-- Inclusion du menu -->
+<div th:insert="menu">...</div>
+
+<!-- Contenu principal -->
+<div class="d-flex justify-content-center align-items-center vh-150">
+  <div class="form-container">
+    <h1 class="text-center">Nouveau Pack</h1>
+    <form id="packForm" action="#" th:action="@{/pack/savePack}" th:object="${packHolder}" method="POST">
+      <!-- Form Fields -->
+      <div class="form-section mb-3">
+        <label for="name" class="form-label fw-bold">Nom Pack</label>
+        <input type="text" id="name" th:field="*{pack.name}" placeholder="Nom Pack" class="form-control">
+        <span th:if="${#fields.hasErrors('pack.name')}" th:errors="*{pack.name}" class="text-danger"></span>
+      </div>
+
+      <div class="form-section mb-3">
+        <label for="quantity" class="form-label fw-bold">Quantité</label>
+        <input type="number" id="quantity" th:field="*{pack.quantity}" min="0" placeholder="Quantité" class="form-control">
+        <span th:if="${#fields.hasErrors('pack.quantity')}" th:errors="*{pack.quantity}" class="text-danger"></span>
+      </div>
+
+      <div class="form-section mb-3">
+        <label for="price" class="form-label fw-bold">Prix</label>
+        <input type="number" id="price" th:field="*{pack.price}" min="0" placeholder="Prix" step="0.1" class="form-control">
+        <span th:if="${#fields.hasErrors('pack.price')}" th:errors="*{pack.price}" class="text-danger"></span>
+      </div>
+
+      <div class="form-section mb-3">
+        <label for="state" class="form-label fw-bold">État</label>
+        <select id="state" name="State" th:field="*{pack.state}" class="form-select">
+          <option value="1" selected>Actif</option>
+          <option value="0">Bloqué</option>
+        </select>
+      </div>
+
+      <!-- Scrollable Table -->
+      <div class="form-group">
+        <div class="mb-3">
+          <label for="tableFilter" class="form-label fw-bold">Filtrer les produits</label>
+          <input type="text" id="tableFilter" placeholder="Rechercher dans la table..." class="form-control">
+        </div>
+
+        <div class="table-container">
+          <table id="products" class="table table-bordered table-hover">
+            <thead class="table-light">
+            <tr>
+              <th hidden>Identifiant Produit</th>
+              <th style="width: 20%;">Marque</th>
+              <th style="width: 20%;">Modèle</th>
+              <th style="width: 15%;">Couleur</th>
+              <th style="width: 20%;">Prix Unitaire</th>
+              <th style="width: 20%;">Quantité Stock</th>
+              <th style="width: 15%;">Quantité</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="packProductsList, itemStat : *{packProductsList}">
+              <td hidden>
+                <input th:field="*{packProductsList[__${itemStat.index}__].product.id}" />
+              </td>
+              <td th:text="*{packProductsList[__${itemStat.index}__].product.mark}"></td>
+              <td th:text="*{packProductsList[__${itemStat.index}__].product.model}"></td>
+              <td th:text="*{packProductsList[__${itemStat.index}__].product.color}"></td>
+              <td th:text="*{packProductsList[__${itemStat.index}__].product.price}"></td>
+              <td th:text="*{packProductsList[__${itemStat.index}__].product.quantity}"></td>
+              <td>
+                <input type="number" min="0" step="1"
+                       th:field="*{packProductsList[__${itemStat.index}__].quantity}"
+                       class="form-control quantity-input">
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#confirmPackModal"
+              class="btn btn-primary w-100 mt-3 btnConfirmPack">Valider</button>
+    </form>
+    <div th:insert="modal/new_pack_modal">...</div>
+  </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/pack-confirm.js}"></script>
+</body>
+</html>

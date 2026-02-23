@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniFlow Pro - Nouveau versement client</title>
+</head>
+
+<body>
+
+<!-- Inclusion du menu -->
+<div th:insert="menu">...</div>
+
+<!-- Contenu principal -->
+<div class="d-flex justify-content-center align-items-center vh-150">
+    <div class="form-container">
+        <h1>Nouveau Versement Client</h1>
+
+        <div th:if="${#strings.toString(param.messageCode)=='0'}" class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle-fill alert-icon"></i> Le montant versé ne doit pas être supérieur au cash du client:
+            <span th:text="${#numbers.formatDecimal(#strings.toString(param.cash), 1, 'POINT', 2, 'COMMA')} +' DA'" ></span>
+        </div>
+
+        <form id="paymentForm" action="#" th:action="@{/cash_register_transaction/customer/saveTransaction}" th:object="${cashRegisterTransaction}" method="POST">
+
+            <div class="form-section mb-3 mt-3">
+                <label for="idCustomer" class="form-label fw-bold">Client:</label><br>
+                <select id="idCustomer" name="idCustomer" th:field="*{customer.id}"  class="form-control mb-4 col-4" required>
+                    <option th:each="customer : ${customers}"
+                            th:value="${customer.id}"
+                            th:text="${customer.name }">
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="amount" class="form-label fw-bold">Montant</label>
+                <input type="number"  id="amount" th:field="*{amount}" placeholder="Montant" class="form-control">
+                <span th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Full name error</span>
+            </div>
+
+            <div hidden="" class="mb-3">
+                <input type="text" id="idCashier" th:field="*{cashier.id}" th:value="*{cashier.id}"  class="form-control">
+            </div>
+
+            <button type="button" class="btn btn-primary w-100 mt-3 btnConfirmPayment">Valider</button>
+        </form>
+        <div th:insert="modal/new_transaction_modal">...</div>
+
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/transaction-confirm.js}"></script>
+</body>
+
+</html>

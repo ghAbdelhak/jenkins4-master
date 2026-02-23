@@ -1,0 +1,43 @@
+<div class="modal fade" id="confirmModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="packModalLabel">Confirmation Création Pack</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <h5>Détails du Pack</h5>
+                    <p><strong>Nom:</strong> <span id="modalPackName"></span></p>
+                    <p><strong>Quantité:</strong> <span id="modalPackQuantity"></span></p>
+                    <p><strong>Prix:</strong> <span id="modalPackPrice"></span></p>
+                    <p><strong>État:</strong> <span id="modalPackState"></span></p>
+                </div>
+
+                <p id="packConfirmMessage" class="alert alert-warning"></p>
+
+                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                    <table id="modalPackTable" class="table table-bordered">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Marque</th>
+                            <th>Modèle</th>
+                            <th>Couleur</th>
+                            <th>Prix Unitaire</th>
+                            <th>Quantité Stock</th>
+                            <th>Quantité Pack</th>
+                        </tr>
+                        </thead>
+                        <tbody id="modalPackTableBody">
+                        <!-- Table content will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-success" id="btnConfirmPackYes">Confirmer</button>
+            </div>
+        </div>
+    </div>
+</div>

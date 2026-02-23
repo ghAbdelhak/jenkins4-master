@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniFlow Pro - Nouveau retrait</title>
+</head>
+
+<body>
+
+<!-- Inclusion du menu -->
+<div th:insert="menu">...</div>
+
+<!-- Contenu principal -->
+<div class="d-flex justify-content-center align-items-center vh-150">
+  <div class="form-container">
+    <h1>Nouveau Retrait Caisse</h1>
+
+
+    <form id="withdrawalForm" action="#" th:action="@{/withdrawal_transaction/saveTransaction}" th:object="${withdrawalTransaction}" method="POST">
+
+
+      <div class="mb-3">
+        <label for="amount" class="form-label fw-bold">Montant</label>
+        <input type="number" id="amount" th:field="*{amount}" placeholder="Montant" class="form-control">
+        <span th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Full name error</span>
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label fw-bold">Description</label>
+        <textarea id="description" th:field="*{description}"
+                  placeholder="Description"
+                  class="form-control"
+                  rows="3">
+
+        </textarea>
+      </div>
+
+      <div hidden="" class="mb-3">
+        <input type="text" id="idCashier" th:field="*{cashier.id}" th:value="*{cashier.id}"  class="form-control">
+      </div>
+
+      <button type="button" class="btn btn-primary w-100 mt-3 btnConfirmWithdrawal">Valider</button>
+    </form>
+    <div th:insert="modal/new_transaction_modal">...</div>
+
+  </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/transaction-confirm.js}"></script>
+
+
+</body>
+
+</html>

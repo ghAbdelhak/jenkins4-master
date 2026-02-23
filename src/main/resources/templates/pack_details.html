@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniFlow Pro - Détails pack</title>
+
+
+</head>
+
+<body>
+<!-- Inclusion du menu -->
+<div th:insert="menu">...</div>
+
+<!-- Contenu principal -->
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="form-container">
+        <h1 class="text-center">Détails Pack</h1>
+        <div class="details-section">
+            <label>Nom Pack :</label>
+            <span th:text="${packHolder.pack.name}"></span>
+        </div>
+        <div class="details-section">
+            <label>Quantité :</label>
+            <span th:text="${packHolder.pack.quantity}"></span>
+        </div>
+
+        <div class="details-section">
+            <label>Prix :</label>
+            <span th:text="${#numbers.formatDecimal(packHolder.pack.price, 1, 'POINT', 2, 'COMMA')} +' DA'">Prix du pack</span>
+        </div>
+        <div class="details-section">
+            <label>État :</label>
+            <span th:text="${packHolder.pack.state} ? 'Actif' : 'Bloqué'"></span>
+        </div>
+
+        <!-- Produits du Pack -->
+        <div class="table-container">
+            <table id="products" class="table table-striped table-bordered table-hover">
+                <thead class="table-primary">
+                <tr>
+                    <th style="width: 20%;">Marque</th>
+                    <th style="width: 20%;">Modèle</th>
+                    <th style="width: 15%;">Couleur</th>
+                    <th style="width: 15%;">Quantité</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="packProducts : ${packHolder.packProductsList}">
+                    <td th:text="${packProducts.product.mark}"></td>
+                    <td th:text="${packProducts.product.model}"></td>
+                    <td th:text="${packProducts.product.color}"></td>
+                    <td th:text="${packProducts.quantity}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

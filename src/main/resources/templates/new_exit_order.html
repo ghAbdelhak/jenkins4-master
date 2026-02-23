@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniFlow Pro - Sortie commande client</title>
+    <link th:href="@{/css/confirm.css}" rel="stylesheet" />
+
+    <style>
+        .table-container {
+            max-height: 300px; /* Adjust the height as needed */
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+
+<body>
+<!-- Inclusion du menu -->
+<div th:insert="menu">...</div>
+
+<!-- Contenu principal -->
+<div class="d-flex justify-content-center align-items-center vh-150">
+    <div class="form-container">
+        <form id="deliveryForm" action="#" th:action="@{/order/existOrder}"
+              th:object="${exitOrderNote}" method="POST"
+        >
+            <!-- Form Fields -->
+            <h2 class="h2 text-center">
+                Sortie Commande client: #
+                <span class="fw-bold text-danger" th:text="${exitOrderNote.order.id}"></span>
+            </h2>
+            <div hidden class="form-section mb-3">
+                <label for="id" class="form-label fw-bold fw-bold">Numéro De Commande</label>
+                <input type="text" id="id" th:field="*{order.id}" class="form-control" readonly="readonly">
+            </div>
+
+            <div hidden class="form-section mb-3">
+                <input type="text"  th:field="*{preparedBy.id}" class="form-control" readonly="readonly">
+            </div>
+
+            <!-- Scrollable Table -->
+            <div class="form-group">
+                <!-- Filter Section -->
+                <div class="mb-3">
+                    <label for="tableFilter" class="form-label fw-bold">Filtrer les produits</label>
+                    <input type="text" id="tableFilter" placeholder="Rechercher dans la table..." class="form-control">
+                </div>
+
+                <div class="table-container">
+                    <table id ="products" class="table table-bordered table-hover">
+                        <thead class="table-light">
+                        <tr>
+                            <th hidden>Identifiant Produit</th>
+                            <th hidden>Identifiant Pack</th>
+                            <th style="width: 20%;">Marque</th>
+                            <th style="width: 20%;">Modèle</th>
+                            <th style="width: 15%;">Couleur</th>
+                            <th style="width: 15%;">Pack</th>
+                            <th style="width: 20%;">Prix</th>
+
+                            <th style="width: 20%;">Quantité</th>
+                            <th style="width: 20%;">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="orderNoteLines, itemStat : *{orderNoteLines}">
+                            <td hidden>
+                                <input  th:field="*{orderNoteLines[__${itemStat.index}__].product.id}" readonly="readonly"/>
+                            </td>
+                            <td hidden>
+                                <input  th:field="*{orderNoteLines[__${itemStat.index}__].pack.id}" readonly="readonly" />
+                            </td>
+                            <td th:text="*{orderNoteLines[__${itemStat.index}__].product.mark}"></td>
+                            <td th:text="*{orderNoteLines[__${itemStat.index}__].product.model}"></td>
+                            <td th:text="*{orderNoteLines[__${itemStat.index}__].product.color}"></td>
+                            <td th:text="*{orderNoteLines[__${itemStat.index}__].pack.name}"></td>
+
+                            <td id="price" th:text="*{orderNoteLines[__${itemStat.index}__].price}">
+                            </td>
+                            <td hidden>
+                                <input th:field="*{orderNoteLines[__${itemStat.index}__].price}" class="form-control">
+
+                            </td>
+                            <td>
+
+                                <input oninput="updateTotal(this)"  type="number" min="0" step="1" th:field="*{orderNoteLines[__${itemStat.index}__].quantity}" class="form-control">
+                            </td>
+                            <td id="total" th:text="*{orderNoteLines[__${itemStat.index}__].quantity*orderNoteLines[__${itemStat.index}__].price}"></td>
+
+                        </tr>
+                        </tbody>
+
+                        <tfoot>
+                        <tr>
+                            <td colspan="6"><strong>Grand Total:</strong></td>
+                            <td>
+                            <input class="border-0 fw-bold text-center"  id="grandTotal" th:field="*{totalPrice}" readonly="readonly"/>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-section mb-3 mt-3">
+                <label for="id" class="form-label fw-bold">Livreur:</label><br>
+                <select id="id" name="id" th:field="*{deliveryPerson.id}"  class="form-control mb-4 col-4" required>
+                    <option th:each="user : ${users}"
+                            th:value="${user.id}"
+                            th:text="${user.firstName+' '+user.lastName }">
+
+                </select>
+            </div>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#confirmModal" class="btn btn-primary w-100 mt-3 btnConfirmDelivery">Valider</button>
+        </form>
+        <div th:insert="modal/exit_order_modal">...</div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript" th:src="@{/js/exit-order-confirm.js}"></script>
+
+<script>
+    function updateTotal(inputElement) {
+        const row = inputElement.closest('tr'); // Get the parent row
+        const priceElement = row.querySelector('#price'); // Price cell
+        const totalElement = row.querySelector('#total'); // Total cell
+
+        const quantity = parseFloat(inputElement.value) || 0; // Get the input value, default to 0
+        const price = parseFloat(priceElement.textContent) || 0; // Get the price, default to 0
+
+        const total = quantity * price; // Calculate the total
+        totalElement.textContent = total.toFixed(2);// Update the total cell with 2 decimal places
+        updateGrandTotal(); // Update the grand total
+    }
+
+    function updateGrandTotal() {
+        const table = document.getElementById('products'); // Get the table element
+        const totalCells = table.querySelectorAll('#total'); // Select all total cells
+        const grandTotalElement = document.getElementById('grandTotal'); // Get the grand total cell
+
+        let grandTotal = 0;
+        totalCells.forEach(cell => {
+            grandTotal += parseFloat(cell.textContent) || 0; // Sum up all total values
+        });
+
+        grandTotalElement.value = grandTotal.toFixed(2); // Update the grand total cell
+    }
+</script>
+</body>
+
+</html>

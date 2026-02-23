@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniFlow Pro - Liste des fournisseurs</title>
+
+</head>
+
+<body>
+<!-- Inclusion du menu -->
+<div th:insert="menu">...</div>
+
+<!-- Contenu principal -->
+<div class="container mt-5">
+  <h1 class="text-center">Liste des Fournisseurs</h1>
+  <br />
+  <div class="mb-3 text-end">
+    <a th:href="@{/supplier/showNewSupplierForm}" class="btn btn-primary">Nouveau Fournisseur</a>
+  </div>
+  <div class="table-container">
+    <table class="table table-striped table-bordered table-hover">
+      <thead class="table-primary">
+      <tr>
+        <th>Nom</th>
+        <th>Adresse</th>
+        <th>Téléphone Fixe</th>
+        <th>Téléphone Mobile</th>
+        <th>Email</th>
+        <th>Date de Création</th>
+        <th>État</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:if="${#lists.isEmpty(suppliers)}">
+        <td colspan="8" style="text-align: center">Aucun founisseur disponible</td>
+      </tr>
+      <tr th:each="supplier : ${suppliers}">
+        <td th:text="${supplier.name}"></td>
+        <td th:text="${supplier.address}"></td>
+        <td th:text="${supplier.homePhone}"></td>
+        <td th:text="${supplier.mobilePhone}"></td>
+        <td th:text="${supplier.email}"></td>
+        <td th:text="${#dates.format(supplier.registrationDate,'dd/MM/yyyy')}"></td>
+        <td th:text="${supplier.state} ? 'Actif' : 'Incatif'"></td>
+        <td>
+          <a th:href="@{/supplier/showSupplierFormForUpdate/{id}(id=${supplier.id})}" class="btn btn-primary">Modifier</a>
+          <a  data-bs-toggle="modal" data-bs-target="#deleteModal"  th:href="@{/supplier/deleteSupplier/{id}(id=${supplier.id})}"  class="btn btn-danger btn-delete btnDeleteSupplier" >Supprimer</a>
+
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div th:insert="modal/delete_supplier_modal">...</div>
+
+  </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/actions.js}"></script>
+
+
+</body>
+
+</html>

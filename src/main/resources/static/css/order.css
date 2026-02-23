@@ -1,0 +1,59 @@
+.table-container {
+    overflow-x: auto;
+}
+.table {
+    min-width: 1200px;
+}
+.badge {
+    font-size: 0.85em;
+}
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+.action-buttons {
+    white-space: nowrap;
+    text-align: center; /* Center the action buttons */
+}
+.state-history-btn {
+    padding: 0.25rem;
+}
+.document-buttons {
+    text-align: center; /* Center the document buttons */
+}
+.document-btn {
+    margin: 1px;
+    min-width: 40px;
+}
+.centered-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+
+.state-badge {
+    font-size: 0.85rem;
+    padding: 0.35em 0.65em;
+}
+.state-PENDING {
+    background-color: #ffc107;
+    color: #000;
+}
+.state-PREPARING {
+    background-color: #0dcaf0;
+    color: #000;
+}
+.state-OUT_FOR_DELIVERY {
+    background-color: #fd7e14;
+    color: #000;
+}
+.state-DELIVERED {
+    background-color: #198754;
+    color: #fff;
+}
+.state-CANCELLED {
+    background-color: #dc3545;
+    color: #fff;
+}

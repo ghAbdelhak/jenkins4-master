@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniFlow Pro - Bon de versement</title>
+  <link th:href="@{/css/note.css}" rel="stylesheet" />
+  <style>
+    @page {
+      size: A4;
+      margin: 1cm;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #0066cc;
+      padding-bottom: 20px;
+    }
+    .header h1 {
+      color: #0066cc;
+      margin-bottom: 5px;
+    }
+    .document-title {
+      font-size: 24px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .company-info {
+      font-size: 14px;
+      color: #666;
+    }
+    .details-section {
+      margin-bottom: 15px;
+      display: flex;
+    }
+    .details-section label {
+      font-weight: bold;
+      min-width: 150px;
+    }
+    .amount-section {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      font-size: 18px;
+    }
+    .signature-section {
+      margin-top: 50px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .signature-box {
+      width: 250px;
+      border-top: 1px solid #000;
+      padding-top: 5px;
+      text-align: center;
+    }
+    .footer {
+      margin-top: 50px;
+      font-size: 12px;
+      text-align: center;
+      color: #666;
+    }
+    @media print {
+      body {
+        padding: 0;
+      }
+      .no-print {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <div class="company-info">UniFlow Pro</div>
+  <div class="document-title">Bon de Versement</div>
+  <div th:text="'N°: ' + ${transaction.id}" style="font-weight: bold; margin-top: 10px;"></div>
+</div>
+
+<div class="details-container">
+  <div class="details-section">
+    <label>Date de versement :</label>
+    <span th:text="${#dates.format(transaction.paymentDate,'dd/MM/yyyy')}"></span>
+  </div>
+
+  <div class="details-section" th:if="${customer != null}">
+    <label>Client :</label>
+    <span th:text="${customer.name}"></span>
+  </div>
+
+  <div class="details-section" th:if="${customer != null and customer.commune != null}">
+    <label>Région :</label>
+    <span th:text="${customer.commune}"></span>
+  </div>
+
+  <div class="details-section" th:if="${user != null}">
+    <label>Commercial :</label>
+    <span th:text="${user.firstName} + ' ' + ${user.lastName}"></span>
+  </div>
+
+  <div class="details-section">
+    <label>Caissier :</label>
+    <span th:text="${cashier.firstName} + ' ' + ${cashier.lastName}"></span>
+  </div>
+
+  <div class="amount-section">
+    <div style="font-weight: bold; margin-bottom: 5px;">Montant versé :</div>
+    <div style="font-size: 24px; font-weight: bold; color: #0066cc;"
+         th:text="${#numbers.formatDecimal(transaction.amount, 1,'POINT', 2, 'COMMA') + ' DA'}">
+    </div>
+    <div style="font-style: italic; margin-top: 5px;"
+         th:text="'(' + ${T(com.example.livapp.util.ConvertUtil).convert(transaction.amount)} + ')'">
+    </div>
+  </div>
+</div>
+
+<div class="signature-section">
+  <div th:if="${customer != null}" class="signature-box">Signature du client</div>
+  <div th:if="${user != null}" class="signature-box">Signature du commercial</div>
+
+  <div class="signature-box">Signature du caissier</div>
+</div>
+
+<div class="footer">
+  <p>Bon généré le <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}"></span></p>
+  <p>UniFlow Pro - Système de gestion commerciale</p>
+</div>
+
+<div  style="margin-top: 30px; text-align: center;">
+  <button onclick="window.print()" style="padding: 10px 20px; background-color: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer;">
+    Imprimer ce bon
+  </button>
+</div>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniFlow Pro - Bon de Clôture de Caisse</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 1cm;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #0066cc;
+      padding-bottom: 20px;
+    }
+    .header h1 {
+      color: #0066cc;
+      margin-bottom: 5px;
+    }
+    .document-title {
+      font-size: 24px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .company-info {
+      font-size: 14px;
+      color: #666;
+    }
+    .closure-info {
+      margin-bottom: 20px;
+    }
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .summary-table th {
+      background-color: #0066cc;
+      color: white;
+      text-align: left;
+      padding: 8px;
+    }
+    .summary-table td {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+    .summary-table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    .total-row {
+      font-weight: bold;
+      background-color: #e6f2ff !important;
+    }
+    .signature-section {
+      margin-top: 50px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .signature-box {
+      width: 250px;
+      border-top: 1px solid #000;
+      padding-top: 5px;
+      text-align: center;
+    }
+    .footer {
+      margin-top: 50px;
+      font-size: 12px;
+      text-align: center;
+      color: #666;
+    }
+    .amount {
+      font-weight: bold;
+      color: #0066cc;
+    }
+    @media print {
+      body {
+        padding: 0;
+      }
+      .no-print {
+        display: none;
+      }
+      .text-success { color: #28a745; }  /* Vert */
+      .text-danger { color: #dc3545; }   /* Rouge */
+      .amount { font-weight: bold; }
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <div class="company-info">UniFlow Pro</div>
+  <div class="document-title">Bon de Clôture de Caisse</div>
+  <div th:text="'N°: CL-' + ${cashClosure.id}" style="font-weight: bold; margin-top: 10px;"></div>
+</div>
+
+<div class="closure-info">
+  <div><strong>Date de clôture :</strong> <span th:text="${#dates.format(cashClosure.closureDate, 'dd/MM/yyyy à HH:mm')}"></span></div>
+  <div><strong>Caissier :</strong> <span th:text="${cashClosure.cashier.firstName} + ' ' + ${cashClosure.cashier.lastName}"></span></div>
+</div>
+
+<table class="summary-table">
+  <thead>
+  <tr>
+    <th>Type</th>
+    <th>Montant total</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>Versements</td>
+    <td class="amount" th:text="${#numbers.formatDecimal(cashClosure.amountReceived, 1,'POINT', 2, 'COMMA') + ' DA ('}+${T(com.example.livapp.util.ConvertUtil).convert(cashClosure.amountReceived)}+')'"></td>
+  </tr>
+  <tr>
+    <td>Retraits</td>
+    <td class="amount" th:text="${#numbers.formatDecimal(cashClosure.amountWithdrawn, 1,'POINT', 2, 'COMMA') + ' DA ('}+${T(com.example.livapp.util.ConvertUtil).convert(cashClosure.amountWithdrawn)}+')'"></td>
+  </tr>
+
+  <tr class="total-row">
+    <td colspan="1">Solde final</td>
+    <td class="amount"
+        th:with="finalBalance=${cashClosure.amountReceived - cashClosure.amountWithdrawn}"
+        th:classappend="${finalBalance >= 0} ? 'text-success' : 'text-danger'"
+        th:text="${#numbers.formatDecimal(finalBalance, 1, 'POINT', 2, 'COMMA') +  ' DA (' }+${T(com.example.livapp.util.ConvertUtil).convert(cashClosure.amountReceived - cashClosure.amountWithdrawn)}+')' ">
+
+    </td>  </tr>
+  </tbody>
+</table>
+
+<div th:if="${not #strings.isEmpty(cashClosure.description)}">
+  <h3>Observations :</h3>
+  <p th:text="${cashClosure.description}"></p>
+</div>
+
+<div class="signature-section">
+  <div class="signature-box">Signature du caissier</div>
+  <div class="signature-box">Signature du responsable</div>
+</div>
+
+<div class="footer">
+  <p>Document généré le <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy à HH:mm')}"></span></p>
+  <p>UniFlow Pro - Système de gestion commerciale</p>
+</div>
+
+<div  style="margin-top: 30px; text-align: center;">
+  <button onclick="window.print()" style="padding: 10px 20px; background-color: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer;">
+    Imprimer ce bon
+  </button>
+</div>
+</body>
+</html>

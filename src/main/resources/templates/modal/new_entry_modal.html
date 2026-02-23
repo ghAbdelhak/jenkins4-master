@@ -1,0 +1,41 @@
+<div class="modal fade" id="confirmEntryModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="entryModalLabel">Confirmation Entrée Stock</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <h5>Détails de l'Entrée</h5>
+          <p><strong>Numéro Bon:</strong> <span id="modalEntryNumber"></span></p>
+          <p><strong>Date:</strong> <span id="modalEntryDate"></span></p>
+          <p><strong>Fournisseur:</strong> <span id="modalSupplier"></span></p>
+        </div>
+
+        <p id="entryConfirmMessage" class="alert alert-warning"></p>
+
+        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+          <table id="modalEntryTable" class="table table-bordered">
+            <thead class="table-light">
+            <tr>
+              <th>Marque</th>
+              <th>Modèle</th>
+              <th>Couleur</th>
+              <th>Prix Unitaire</th>
+              <th>Quantité</th>
+            </tr>
+            </thead>
+            <tbody id="modalEntryTableBody">
+            <!-- Table content will be inserted here by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-success" id="btnConfirmEntryYes">Confirmer</button>
+      </div>
+    </div>
+  </div>
+</div>

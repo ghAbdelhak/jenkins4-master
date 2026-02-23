@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniFlow Pro - Nouveau produit</title>
+</head>
+
+<body>
+
+<!-- Inclusion du menu -->
+<div th:insert="menu">...</div>
+
+<!-- Contenu principal -->
+<div class="d-flex justify-content-center align-items-center vh-150">
+    <div class="form-container">
+        <h1>Nouveau Produit</h1>
+        <form action="#" th:action="@{/product/saveProduct}" th:object="${product}" method="POST">
+
+            <div class="mb-3">
+                <label for="barCode" class="form-label fw-bold">Code Barre</label>
+                <input type="text" id="barCode" th:field="*{barCode}" placeholder="Code Barre" class="form-control">
+                <span th:if="${#fields.hasErrors('barCode')}" th:errors="*{barCode}">Full name error</span>
+            </div>
+
+            <div class="mb-3">
+                <label for="mark" class="form-label fw-bold">Marque</label>
+                <input type="text" id="mark" th:field="*{mark}" placeholder="Marque" class="form-control">
+                <span th:if="${#fields.hasErrors('mark')}" th:errors="*{mark}">Full name error</span>
+
+            </div>
+
+            <div class="mb-3">
+                <label for="model" class="form-label fw-bold">Modèle</label>
+                <input type="text" id="model" th:field="*{model}" placeholder="Modèle" class="form-control">
+                <span th:if="${#fields.hasErrors('model')}" th:errors="*{model}">Full name error</span>
+
+            </div>
+
+            <div class="mb-3">
+                <label for="color" class="form-label fw-bold">Couleur</label>
+                <select id="color" name="color" th:field="*{color}" class="form-select">
+                    <option value="Sans" hidden>Sans Couleur</option>
+                    <option value="Rouge">Rouge</option>
+                    <option value="Vert">Vert</option>
+                    <option value="Bleu">Bleu</option>
+                    <option value="Jaune">Jaune</option>
+                    <option value="Noir">Noir</option>
+                    <option value="Blanc">Blanc</option>
+                    <option value="Gris">Gris</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="type" class="form-label fw-bold">Type</label>
+                <select id="type" name="Type" th:field="*{type}" class="form-select">
+                    <option value="Smartphone">Smartphone</option>
+                    <option value="Cell Phone">Cell Phone</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="quantity" class="form-label fw-bold">Quantité</label>
+                <input type="number" id="quantity" th:field="*{quantity}" min="0" placeholder="Quantité" class="form-control">
+                <span th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}">Full name error</span>
+
+            </div>
+
+            <div class="mb-3">
+                <label for="reservedQuantity" class="form-label fw-bold">Quantité Réservée</label>
+                <input type="number" id="reservedQuantity" min="0" th:field="*{reservedQuantity}" placeholder="Quantité Réservée" class="form-control">
+                <span th:if="${#fields.hasErrors('reservedQuantity')}" th:errors="*{reservedQuantity}">Full name error</span>
+                <span th:if="${#fields.hasErrors('${product}')}" th:errors="${product}"></span>
+
+            </div>
+
+            <div class="mb-3">
+                <label for="price" class="form-label fw-bold">Prix</label>
+                <input type="number" id="price" th:field="*{price}" min="0" placeholder="Prix" step="0.1" class="form-control">
+                <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Full name error</span>
+
+            </div>
+
+            <div class="mb-3">
+                <label for="state" class="form-label fw-bold">État</label>
+                <select id="state" name="State" th:field="*{state}" class="form-select">
+                    <option value="1" selected>Actif</option>
+                    <option value="0">Bloqué</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3">Valider</button>
+        </form>
+    </div>
+</div>
+
+</body>
+
+</html>

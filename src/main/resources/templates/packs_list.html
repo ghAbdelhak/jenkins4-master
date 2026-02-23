@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniFlow Pro - Liste des packs</title>
+
+</head>
+
+<body>
+<!-- Inclusion du menu -->
+<div th:insert="menu">...</div>
+
+<!-- Contenu principal -->
+<div class="container mt-5">
+    <h1 class="text-center">Liste des Packs</h1>
+    <br />
+    <div class="mb-3 text-end">
+        <a th:href="@{/pack/showNewPackForm}" class="btn btn-primary">Nouveau Pack</a>
+    </div>
+    <div class="table-container">
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="table-primary">
+            <tr>
+                <th>Nom Pack</th>
+                <th>Quantité</th>
+                <th>Prix</th>
+                <th>État</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(packs)}">
+                <td colspan="8" style="text-align: center">Aucun pack disponible</td>
+            </tr>
+            <tr th:each="pack : ${packs}">
+                <td th:text="${pack.name}"></td>
+                <td th:text="${pack.quantity}"></td>
+                <td th:text="${#numbers.formatDecimal(pack.price, 1, 'POINT', 2, 'COMMA')}+ ' DA'"></td>
+                <td th:text="${pack.state} ? 'Actif' : 'Bloqué'"></td>
+                <td>
+                    <a th:href="@{/pack/showPackDetails/{id}(id=${pack.id})}" class="btn btn-info">Détails</a>
+                    <a th:href="@{/pack/showPackFormForUpdate/{id}(id=${pack.id})}" class="btn btn-primary">Modifier</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${totalPages > 1}" class="mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span>Total Items: [[${totalItems}]] | Page [[${currentPage}]] of [[${totalPages}]]</span>
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <!-- First Page Link -->
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{'/pack/page/' + 1}" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <!-- Previous Page Link -->
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{'/pack/page/' + ${currentPage - 1}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <!-- Page Numbers -->
+                    <li class="page-item" th:each="i: ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{'/pack/page/' + ${i}}">[[${i}]]</a>
+                    </li>
+                    <!-- Next Page Link -->
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                        <a class="page-link" th:href="@{'/pack/page/' + ${currentPage + 1}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <!-- Last Page Link -->
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                        <a class="page-link" th:href="@{'/pack/page/' + ${totalPages}}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

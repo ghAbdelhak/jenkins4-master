@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniFlow Pro - Bon de sortie</title>
+  <link th:href="@{/css/exit_note.css}" rel="stylesheet" />
+
+
+</head>
+<body>
+<div class="header">
+  <div class="company-name">UNIFLOW PRO</div>
+  <div class="document-title">Bon de sortie</div>
+</div>
+
+<div class="document-info">
+  <div class="info-item">
+    <div class="info-label">N° Commande:</div>
+    <div th:text="${exitCommercialOrderNote.commercialOrder.id}"></div>
+  </div>
+  <div class="info-item">
+    <div class="info-label">Date commande:</div>
+    <div th:text="${#dates.format(exitCommercialOrderNote.commercialOrder.orderDate,'dd/MM/yyyy HH:mm')}"></div>
+  </div>
+  <div class="info-item">
+    <div class="info-label">Commercial:</div>
+    <div th:text="${exitCommercialOrderNote.commercialOrder.user.firstName} + ' ' + ${exitCommercialOrderNote.commercialOrder.user.lastName}"></div>
+  </div>
+  <div class="info-item">
+    <div class="info-label">Préparé le:</div>
+    <div th:text="${#dates.format(exitCommercialOrderNote.getCreationDate(),'dd/MM/yyyy HH:mm')}"></div>
+  </div>
+  <div class="info-item">
+    <div class="info-label">Préparé par:</div>
+    <div th:text="${exitCommercialOrderNote.preparedBy.firstName} + ' ' + ${exitCommercialOrderNote.preparedBy.lastName}"></div>
+  </div>
+  <div class="info-item">
+    <div class="info-label">Reçu par:</div>
+    <div th:text="${exitCommercialOrderNote.deliveryPerson.firstName} + ' ' + ${exitCommercialOrderNote.deliveryPerson.lastName}"></div>
+  </div>
+</div>
+
+<table class="products-table">
+  <thead>
+  <tr>
+    <th>Marque</th>
+    <th>Modèle</th>
+    <th>Couleur</th>
+    <th>Pack</th>
+    <th class="text-center">Quantité</th>
+    <th class="text-center">Prix unitaire</th>
+    <th class="text-center">Total</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="line : ${exitCommercialOrderNote.commercialOrderNoteLines}">
+    <td th:text="${line.product?.mark}"></td>
+    <td th:text="${line.product?.model}"></td>
+    <td th:text="${line.product?.color}"></td>
+    <td th:text="${line.pack?.name}"></td>
+    <td class="text-center" th:text="${line.quantity}"></td>
+    <td class="text-center" th:text="${#numbers.formatDecimal(line.price, 1, 'POINT', 2, 'COMMA') + ' DA'}"></td>
+    <td class="text-center" th:text="${#numbers.formatDecimal(line.quantity * line.price, 1, 'POINT', 2, 'COMMA') + ' DA'}"></td>
+  </tr>
+  </tbody>
+</table>
+
+<div class="total-section">
+  <span>Total général: </span>
+  <span class="total-amount" th:text="${#numbers.formatDecimal(exitCommercialOrderNote.totalPrice, 1, 'POINT', 2, 'COMMA') + ' DA'}"></span>
+</div>
+
+<div class="signature-section">
+  <div class="signature-box">
+    <div class="signature-line"></div>
+    <div>Signature préparateur</div>
+  </div>
+  <div class="signature-box">
+    <div class="signature-line"></div>
+    <div>Signature destinataire</div>
+  </div>
+</div>
+
+<div class="footer">
+  <div>Document généré le <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy à HH:mm')}"></span></div>
+  <div>UniFlow Pro - Système de gestion commerciale</div>
+</div>
+
+<div  style="margin-top: 30px; text-align: center;">
+  <button onclick="window.print()" style="padding: 10px 20px; background-color: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer;">
+    Imprimer ce bon
+  </button>
+</div>
+</body>
+</html>

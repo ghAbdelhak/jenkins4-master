@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniFlow Pro - Versements journaliers</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link th:href="@{/css/order.css}" rel="stylesheet" />
+</head>
+
+<body>
+<!-- Inclusion du menu -->
+<div th:insert="menu">...</div>
+
+<!-- Contenu principal -->
+<div class="container mt-5">
+
+    <h1 class="text-center mb-4">Liste Des Versements Journaliers</h1>
+    <hr style="margin: 40px 0;">
+
+    <div class="table-container">
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="table-primary">
+            <tr>
+                <th style="width: 10%">N° Versement</th>
+                <th style="width: 10%">Date</th>
+                <th style="width: 10%">Heure</th>
+                <th style="width: 10%">Commercial</th>
+                <th style="width: 10%">Client</th>
+                <th style="width: 10%">Region</th>
+                <th style="width: 15%">Caissier</th>
+                <th style="width: 20%">Montant</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(cashRegisterTransactions)}">
+                <td colspan="8" class="text-center">Aucun versement</td>
+            </tr>
+            <tr th:each="transaction : ${cashRegisterTransactions}">
+                <td th:text="${transaction.id}"></td>
+                <td th:text="${#dates.format(transaction.paymentDate,'dd/MM/yyyy')}"></td>
+                <td th:text="${#dates.format(transaction.paymentDate,'HH:mm')}"></td>
+                <td th:text="${transaction?.user?.firstName ?:''} +' '+${transaction?.user?.lastName ?:'' } "></td>
+                <td th:text="${transaction?.customer?.name} ?:''"></td>
+                <td th:text="${transaction?.customer?.commune} ?:''"></td>
+                <td th:text="${transaction?.cashier?.firstName}+' '+${transaction?.cashier?.lastName}"></td>
+                <td class="text-nowrap" th:text="${#numbers.formatDecimal(transaction.amount, 1,'POINT', 2, 'COMMA') +' DA'}"></td>
+            </tr>
+            <!-- Ligne du total -->
+            <tr th:if="${not #lists.isEmpty(cashRegisterTransactions)}" class="table-info fw-bold">
+                <td colspan="7" class="text-end">Total:</td>
+                <td class="text-nowrap" th:text="${#numbers.formatDecimal(#aggregates.sum(cashRegisterTransactions.![amount]), 1,'POINT', 2, 'COMMA') +' DA'}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr style="margin: 40px 0;">
+    <h1 class="text-center mb-4">Liste Des Retraits Journaliers</h1>
+    <br />
+
+
+    <div class="table-container">
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="table-primary">
+            <tr>
+                <th style="width: 10%">N° Retrait</th>
+                <th style="width: 10%">Date</th>
+                <th style="width: 10%">Heure</th>
+                <th style="width: 15%">Caissier</th>
+                <th style="width: 25%">Description</th>
+                <th style="width: 25%">Montant</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(withdrawalTransactions)}">
+                <td colspan="8" class="text-center">Aucun versement</td>
+            </tr>
+            <tr th:each="transaction : ${withdrawalTransactions}">
+                <td th:text="${transaction.id}"></td>
+                <td th:text="${#dates.format(transaction.withdrawalDate,'dd/MM/yyyy')}"></td>
+                <td th:text="${#dates.format(transaction.withdrawalDate,'HH:mm')}"></td>
+                <td th:text="${transaction?.cashier?.firstName}+' '+${transaction?.cashier?.lastName}"></td>
+                <td th:text="${transaction.description}"></td>
+                <td class="text-nowrap" th:text="${#numbers.formatDecimal(transaction.amount, 1,'POINT', 2, 'COMMA') +' DA'}"></td>
+
+            </tr>
+            <!-- Ligne du total -->
+            <tr th:if="${not #lists.isEmpty(withdrawalTransactions)}" class="table-info fw-bold">
+                <td colspan="5" class="text-end">Total:</td>
+                <td class="text-nowrap" th:text="${#numbers.formatDecimal(#aggregates.sum(withdrawalTransactions.![amount]), 1,'POINT', 2, 'COMMA') +' DA'}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+</body>
+</html>

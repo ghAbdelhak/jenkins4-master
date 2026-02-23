@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniFlow Pro - Modification fournisseur</title>
+
+
+</head>
+
+<body>
+
+<!-- Inclusion du menu -->
+<div th:insert="menu">...</div>
+
+<!-- Contenu principal -->
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <div class="form-container">
+    <h1>Modification Fournisseur</h1>
+    <form action="#" th:action="@{/supplier/updateSupplier}" th:object="${supplier}" method="POST">
+      <input type="hidden" th:field="*{id}" />
+
+      <div class="mb-3">
+        <label for="name" class="form-label fw-bold">Nom</label>
+        <input type="text" id="name" th:field="*{name}" placeholder="Nom" class="form-control">
+        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Full name error</span>
+
+      </div>
+
+
+      <div class="mb-3">
+        <label for="address" class="form-label fw-bold">Adresse</label>
+        <textarea type="text" id="address" th:field="*{address}" placeholder="Adresse" class="form-control" rows="3"/>
+        <span th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Full address error</span>
+      </div>
+
+      <div class="mb-3">
+        <label for="homePhone" class="form-label fw-bold">Téléphone Fixe</label>
+        <input type="text" id="homePhone" th:field="*{homePhone}" placeholder="Téléphone Fixe" class="form-control">
+        <span th:if="${#fields.hasErrors('homePhone')}" th:errors="*{homePhone}">Full home phone error</span>
+      </div>
+
+      <div class="mb-3">
+        <label for="mobilePhone" class="form-label fw-bold">Téléphone Mobile</label>
+        <input type="text" id="mobilePhone" th:field="*{mobilePhone}" placeholder="Téléphone Mobile" class="form-control">
+        <span th:if="${#fields.hasErrors('mobilePhone')}" th:errors="*{mobilePhone}">Full mobile phone error</span>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label fw-bold">Email</label>
+        <input type="text" id="email" th:field="*{email}" placeholder="Email" class="form-control">
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Full email error</span>
+      </div>
+
+      <div class="mb-3">
+        <label for="state" class="form-label fw-bold">État</label>
+        <select id="state" name="State" th:field="*{state}" class="form-select">
+          <option value="1" selected>Actif</option>
+          <option value="0">Inactif</option>
+        </select>
+      </div>
+
+
+
+      <button type="submit" class="btn btn-primary w-100 mt-3">Valider</button>
+    </form>
+  </div>
+</div>
+
+</body>
+
+</html>

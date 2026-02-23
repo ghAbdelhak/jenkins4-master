@@ -1,0 +1,40 @@
+<div class="modal fade" id="confirmModal">
+  <div class="modal-dialog modal-lg"> <!-- Added modal-lg for larger size -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">Confirmation</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmMessage" class="alert alert-danger"></p>
+        <!-- Add a scrollable container for the table -->
+        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+          <table id="modalTable" class="table table-bordered">
+            <thead class="table-light">
+            <tr>
+              <th>Marque</th>
+              <th>Modèle</th>
+              <th>Couleur</th>
+              <th>Pack</th>
+              <th>Prix</th>
+              <th>Quantité</th>
+              <th>Total</th>
+            </tr>
+            </thead>
+            <tbody id="modalTableBody">
+            <!-- Table content will be inserted here by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-3">
+          <strong>Grand Total:</strong>
+          <span id="modalGrandTotal" class="fw-bold"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Quitter</button>
+        <a href="" type="button" class="btn btn-success" id="btnConfirmYes">Valider</a>
+      </div>
+    </div>
+  </div>
+</div>

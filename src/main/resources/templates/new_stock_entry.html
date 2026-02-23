@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniFlow Pro - Nouvelle entrée stock</title>
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <link th:href="@{/css/confirm.css}" rel="stylesheet" />
+
+    <style>
+        .table-container {
+            max-height: 300px; /* Adjust the height as needed */
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        #registrationDate:hover {
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+<!-- Inclusion du menu -->
+<div th:insert="menu">...</div>
+
+<!-- Contenu principal -->
+<div class="d-flex justify-content-center align-items-center vh-150">
+    <div class="form-container">
+        <h1 class="text-center">Nouvelle Entrée Stock</h1>
+        <form id="entryForm" action="#" th:action="@{/stock/saveStockEntry}" th:object="${stockEntryHolder}" method="POST">
+            <!-- Form Fields -->
+            <div class="form-section mb-3">
+                <label for="entryNumber" class="form-label fw-bold fw-bold">Numéro Bon</label>
+                <input type="text" id="entryNumber" th:field="*{stockEntry.entryNumber}" placeholder="Numéro Bon" class="form-control">
+                <span th:if="${#fields.hasErrors('stockEntry.entryNumber')}" th:errors="*{stockEntry.entryNumber}" class="text-danger"></span>
+            </div>
+
+            <div class="form-section mb-3">
+
+                <label for="registrationDate" class="form-label fw-bold fw-bold">Date</label>
+                <input type="text" th:field="*{stockEntry.entryDate}" id="registrationDate" class="form-control" placeholder="Date" required>
+            </div>
+
+            <div class="form-section mb-3">
+                <label for="idSupplier" class="form-label fw-bold fw-bold">Fournisseur:</label><br>
+                <select id="idSupplier" name="idSupplier" th:field="*{stockEntry.supplier.id}" class="form-select" aria-label="Default select example" required>
+                    <option th:each="supplier : ${suppliers}" th:value="${supplier.id}"  th:text="${supplier.name}">
+
+                </select>
+            </div>
+
+
+            <!-- Scrollable Table -->
+            <div class="form-group">
+                <!-- Filter Section -->
+                <div class="mb-3">
+                    <label for="tableFilter" class="form-label fw-bold">Filtrer les produits</label>
+                    <input type="text" id="tableFilter" placeholder="Rechercher dans la table..." class="form-control">
+                </div>
+
+
+                <div class="table-container">
+                    <table id ="products" class="table table-bordered table-hover">
+                        <thead class="table-light">
+                        <tr>
+                            <th hidden>Identifiant Produit</th>
+                            <th style="width: 20%;">Marque</th>
+                            <th style="width: 20%;">Modèle</th>
+                            <th style="width: 15%;">Couleur</th>
+                            <th style="width: 20%;">Prix Unitaire</th>
+                            <th style="width: 15%;">Quantité</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="stockEntryLines, itemStat : *{stockEntryLines}">
+                            <td hidden>
+                                <input th:field="*{stockEntryLines[__${itemStat.index}__].product.id}" />
+                            </td>
+                            <td th:text="*{stockEntryLines[__${itemStat.index}__].product.mark}"></td>
+                            <td th:text="*{stockEntryLines[__${itemStat.index}__].product.model}"></td>
+                            <td th:text="*{stockEntryLines[__${itemStat.index}__].product.color}"></td>
+                            <td>
+                                <input type="number" min="0" step="0.1" th:field="*{stockEntryLines[__${itemStat.index}__].price}" class="form-control">
+                            </td>
+                            <td>
+                                <input type="number" min="0" step="1" th:field="*{stockEntryLines[__${itemStat.index}__].quantity}" class="form-control">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary w-100 mt-3 btnConfirmEntry">Valider</button>
+        </form>
+        <div th:insert="modal/new_entry_modal">...</div>
+
+    </div>
+</div>
+
+<!-- jQuery for Table Filter -->
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script type="text/javascript" th:src="@{/js/date.js}"></script>
+<script type="text/javascript" th:src="@{/js/entry-confirm.js}"></script>
+<script type="text/javascript" th:src="@{/js/actions.js}"></script>
+
+
+</body>
+
+</html>
