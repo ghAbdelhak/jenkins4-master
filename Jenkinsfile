@@ -1,21 +1,19 @@
 pipeline {
-agent any
+    agent any
 // password vgdo tbxb yiyf smar
-stages {
-    stage('Checkout') {
+    stages {
+        stage('Checkout') {
             steps {
                 checkout scm
 
 
-
-
             }
         }
-    stage('Init') {
-        steps {
-            bat './mvnw clean'
+        stage('Init') {
+            steps {
+                bat './mvnw clean'
+            }
         }
-    }
 
 //    stage('Parallel') {
 //        parallel {
@@ -52,70 +50,77 @@ stages {
 //        }
 //    }
 
-    stage('Build') {
-        steps {
-            bat './mvnw install'
-            archiveArtifacts artifacts: 'target/*.jar'
+        stage('Build') {
+            steps {
+                bat './mvnw install'
+                archiveArtifacts artifacts: 'target/*.jar'
+            }
         }
-    }
 
 
-    stage('Deploy') {
-        when {
-            branch 'master'
+        stage('Deploy') {
+            when {
+                branch 'master'
+            }
+            steps {
+                echo 'Deploying application...'
+
+                // Stop and remove containers safely
+                bat 'docker-compose down --remove-orphans'
+                bat 'docker rm -f spring-boot-app || exit 0'
+                bat 'docker rm -f mysql-db || exit 0'
+
+                // Rebuild and start
+                bat 'docker-compose up --build -d'
+            }
         }
-        steps {
-            bat '''
-        docker-compose down --rmi all --volumes --remove-orphans
-        docker system prune -f
-        docker-compose up --build -d
-        '''
-        }
-    }
 
-    stage('Health Check') {
-        steps {
-            echo "Checking Health..."
-            sleep time: 15, unit: 'SECONDS'
+        stage('Health Check') {
+            steps {
+                echo "Checking Health..."
+                sleep time: 15, unit: 'SECONDS'
 
-            script {
+                script {
 
-                def result = bat(
-                        script: '''
-                @echo off
-                curl -s -o response.json -w "%%{http_code}" http://localhost:8082/actuator/health > status.txt 2>nul
-                if errorlevel 1 (
-                    echo 000 > status.txt
-                )
-                type status.txt
-                ''',
-                        returnStdout: true
-                ).trim()
+                    def httpCode = bat(script: '''
+                                        @echo off
+                                        setlocal
+                                
+                                        curl -s -o response.json -w "%%{http_code}" http://localhost:8082/actuator/health > status.txt 2>nul
+                                
+                                        if errorlevel 1 (
+                                            echo 000 > status.txt
+                                        )
+                                
+                                        set /p code=<status.txt
+                                        echo %code%
+                                
+                                        exit /b 0
+                                        ''',
+                            returnStdout: true).trim()
 
-                def httpCode = result
+                    echo "HTTP Code: ${httpCode}"
 
-                echo "HTTP Code: ${httpCode}"
+                    if (httpCode == "200") {
 
-                if (httpCode == "200") {
+                        def body = readFile('response.json')
+                        echo "Body: ${body}"
 
-                    def body = readFile('response.json')
-                    echo "Body: ${body}"
+                        if (body.contains('"status":"UP"')) {
+                            echo "Application is healthy ✅"
+                        } else {
+                            error("Health endpoint returned non-UP status")
+                        }
 
-                    if (body.contains('"status":"UP"')) {
-                        echo "Application is healthy ✅"
                     } else {
-                        error("Health endpoint returned non-UP status")
+                        error("Application not reachable")
                     }
-
-                } else {
-                    error("Application not reachable")
                 }
             }
         }
+
+
     }
-
-
-}
     post {
         success {
             echo 'success'
