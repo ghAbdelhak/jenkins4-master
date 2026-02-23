@@ -76,43 +76,39 @@ stages {
     stage('Health Check') {
         steps {
             echo "Checking Health..."
-            sleep time: 10, unit: 'SECONDS'
-
+            sleep time: 15, unit: 'SECONDS'
 
             script {
 
-
                 def result = bat(
-                        script: """
-                  curl -s -o response.json -w "%%{http_code}" http://localhost:8082/actuator/health || echo 000
-               """,
+                        script: '''
+                @echo off
+                curl -s -o response.json -w "%%{http_code}" http://localhost:8082/actuator/health > status.txt 2>nul
+                if errorlevel 1 (
+                    echo 000 > status.txt
+                )
+                type status.txt
+                ''',
                         returnStdout: true
                 ).trim()
 
-
                 def httpCode = result
-
 
                 echo "HTTP Code: ${httpCode}"
 
-
                 if (httpCode == "200") {
-
 
                     def body = readFile('response.json')
                     echo "Body: ${body}"
 
-
                     if (body.contains('"status":"UP"')) {
                         echo "Application is healthy ✅"
                     } else {
-                        currentBuild.result = 'FAILURE'
+                        error("Health endpoint returned non-UP status")
                     }
 
-
                 } else {
-                    echo "Application not reachable"
-                    currentBuild.result = 'FAILURE'
+                    error("Application not reachable")
                 }
             }
         }
